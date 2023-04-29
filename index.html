@@ -98,12 +98,12 @@
     <div class="container">
         <h1>Enter Messages</h1>
         <div class="form">
-            <label>Name</label>
+            <label>Name:</label>
             <input type="text" name="Name" id="name">
-            <label>Email</label>
+            <label>Email:</label>
             <input type="email" name="Email" id="email">
-            <label>Message</label>
-            <textarea></textarea>
+            <label>Number:</label>
+            <input type="number" name="Number" id="number">
             <button>Submit</button>
         </div>
     </div>
@@ -129,13 +129,13 @@
     function sendData(){
         var name = document.querySelectorAll('input')[0]
         var email = document.querySelectorAll('input')[1]
-        var message = document.querySelector('textarea')
+        var number = document.querySelector('input')[2]
 
         alert("Data Inserted");
 
  
         // set path where data will store
-        var listRef = database.ref('messages/')
+        var listRef = database.ref('user/')
         // but we need firebase generated unique id's to show list data so
         // push() will generate unique id
         var newRef = listRef.push()
@@ -144,7 +144,7 @@
             // now send our data
             'name': name.value,
             'email': email.value,
-            'message': message.value
+            'number': number.value
         })
     }
 
@@ -162,7 +162,7 @@
               <tr>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Message</th>
+                  <th>Number</th>
                   <th>Actions</th>
               </tr>
           </thead>
@@ -170,14 +170,13 @@
           </tbody>
       </table>
   </div>
-<!-- add firebase CDN -->
 
 <script>
 
   const dataContainer = document.querySelector('tbody')
 
   // give complete path to fetch data as given during sending
-  var fetchedData = database.ref('messages/')
+  var fetchedData = database.ref('user/')
   fetchedData.on('value', (snapshot) => {
       var data = snapshot.val()
       // now set data in table
@@ -188,7 +187,7 @@
               <tr>
                   <td>${value.name}</td>
                   <td>${value.email}</td>
-                  <td>${value.message}</td>
+                  <td>${value.number}</td>
                   <td>
                       <button onclick="readyForUpdate('${key}', this)">Update</button>
                       <button onclick="removeMess('${key}')">Delete</button>
@@ -202,7 +201,7 @@
 
   // remove message function
   function removeMess(uniqueId){
-      database.ref('messages/' + uniqueId).remove()
+      database.ref('user/' + uniqueId).remove()
       // this realtime remove will delete data without any loading
       // as data is updated, it refetch and rerender in html automatically
       alert("Data Removed");
@@ -230,11 +229,11 @@
       var obj = {
           'name': contentId[0].textContent,
           'email': contentId[1].textContent,
-          'message': contentId[2].textContent
+          'number': contentId[2].textContent
       }
       // create reference to the data first where data will update
       // uniqueId will be the id of each message in db
-      var listRef = database.ref('messages/' + uniqueId)
+      var listRef = database.ref('user/' + uniqueId)
       // now provide updated data
       listRef.update(obj)
       // after update new data will rerender automatically

@@ -96,14 +96,14 @@
 <body>
 
     <div class="container">
-        <h1>Enter User Information</h1>
+        <h1>Enter Message</h1>
         <div class="form">
-            <label>Name:</label>
+            <label>Name</label>
             <input type="text" name="Name" id="name">
-            <label>Email:</label>
+            <label>Email</label>
             <input type="email" name="Email" id="email">
-            <label>Number:</label>
-            <input type="number" name="Number" id="number">
+            <label>Message</label>
+            <textarea></textarea>
             <button>Submit</button>
         </div>
     </div>
@@ -129,13 +129,13 @@
     function sendData(){
         var name = document.querySelectorAll('input')[0]
         var email = document.querySelectorAll('input')[1]
-        var number = document.querySelector('input')[2]
+        var message = document.querySelector('textarea')
 
         alert("Data Inserted");
 
  
         // set path where data will store
-        var listRef = database.ref('user/')
+        var listRef = database.ref('messages/')
         // but we need firebase generated unique id's to show list data so
         // push() will generate unique id
         var newRef = listRef.push()
@@ -144,7 +144,7 @@
             // now send our data
             'name': name.value,
             'email': email.value,
-            'number': number.value
+            'message': message.value
         })
     }
 
@@ -162,7 +162,7 @@
               <tr>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Number</th>
+                  <th>Message</th>
                   <th>Actions</th>
               </tr>
           </thead>
@@ -176,7 +176,7 @@
   const dataContainer = document.querySelector('tbody')
 
   // give complete path to fetch data as given during sending
-  var fetchedData = database.ref('user/')
+  var fetchedData = database.ref('messages/')
   fetchedData.on('value', (snapshot) => {
       var data = snapshot.val()
       // now set data in table
@@ -187,7 +187,7 @@
               <tr>
                   <td>${value.name}</td>
                   <td>${value.email}</td>
-                  <td>${value.number}</td>
+                  <td>${value.message}</td>
                   <td>
                       <button onclick="readyForUpdate('${key}', this)">Update</button>
                       <button onclick="removeMess('${key}')">Delete</button>
@@ -201,7 +201,7 @@
 
   // remove message function
   function removeMess(uniqueId){
-      database.ref('user/' + uniqueId).remove()
+      database.ref('messages/' + uniqueId).remove()
       // this realtime remove will delete data without any loading
       // as data is updated, it refetch and rerender in html automatically
       alert("Data Removed");
@@ -229,11 +229,11 @@
       var obj = {
           'name': contentId[0].textContent,
           'email': contentId[1].textContent,
-          'number': contentId[2].textContent
+          'message': contentId[2].textContent
       }
       // create reference to the data first where data will update
       // uniqueId will be the id of each message in db
-      var listRef = database.ref('user/' + uniqueId)
+      var listRef = database.ref('messages/' + uniqueId)
       // now provide updated data
       listRef.update(obj)
       // after update new data will rerender automatically
